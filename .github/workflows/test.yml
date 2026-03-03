@@ -1,0 +1,25 @@
+name: Test multi-artifact upload
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test-multi-artifact-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup test files
+        run: |
+          curl -o baa.jpg https://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg
+          curl -o foo.png https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png
+          echo "My name is Shaun" > sheep.txt
+
+      - uses: ./
+        id: upload-multiple-artifacts
+        with:
+          files-to-upload: '["./baa.jpg", "./foo.png", "./sheep.txt"]'
+
+      - run: |
+          echo ${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}

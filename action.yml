@@ -1,0 +1,54 @@
+name: Upload multiple artifacts
+description: Why is this needed? Because actions/upload-artifact only allows you to upload a single file/archive. 
+  If you have a dynamic number of files you want uploaded (separately), you're SoL.
+  Inspired mainly by https://gist.github.com/LJBNZ/35a59ea05d8d3854b8c31f0495727aed
+
+inputs:
+  files-to-upload:
+    description: A JSON-serialized array of filenames to upload
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24.x
+
+    - shell: bash
+      run: |
+        npm install @actions/artifact@^6.2.0
+
+    - name: Upload artifacts using @actions/artifact
+      id: upload-artifacts
+      uses: actions/github-script@v8
+      env:
+        FILES_TO_UPLOAD: ${{ inputs.files-to-upload }}
+      with:
+        github-token: ${{ github.token }}
+        result-encoding: 'json'
+        script: |
+          const { DefaultArtifactClient } = await import('${{ github.workspace }}/node_modules/@actions/artifact/lib/artifact.js');
+          const artifactClient = new DefaultArtifactClient();
+
+          async function uploadSingleFileArtifact(file) {
+            console.log(`Uploading ${file}...`);
+            const { id, size } = await artifactClient.uploadArtifact(file, [file], './', { skipArchive: true });
+            console.log(`Uploaded artifact ${id} with size ${size} bytes`);
+            return { id, size };
+          }
+          
+          const files = JSON.parse(process.env.FILES_TO_UPLOAD);
+          const output = {};
+
+          for (const file of files) {
+            const { id } = await uploadSingleFileArtifact(file);
+            output[file] = id;
+          }
+
+          return output;
+
+outputs:
+  artifact-ids:
+    description: A JSON mapping of the input filenames to uploaded artifact IDs
+    value: ${{ steps.upload-artifacts.outputs.result }}
