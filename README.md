@@ -13,6 +13,10 @@ This solves that problem.
 files-to-upload:
   description: A JSON-serialized array of filenames to upload
   required: true
+ensure-uniqueness:
+  description: Add a unique suffix to each artifact name, to avoid collisions
+  required: false
+  default: 'true'
 ```
 
 E.g. 
