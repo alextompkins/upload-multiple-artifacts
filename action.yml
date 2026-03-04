@@ -1,7 +1,8 @@
 name: Upload multiple artifacts
-description: Why is this needed? Because actions/upload-artifact only allows you to upload a single file/archive. 
-  If you have a dynamic number of files you want uploaded (separately), you're SoL.
-  Inspired mainly by https://gist.github.com/LJBNZ/35a59ea05d8d3854b8c31f0495727aed
+description: GitHub action to upload multiple files as separate artifacts, without them being put into a single archive.
+branding:
+  icon: upload
+  color: green
 
 inputs:
   files-to-upload:

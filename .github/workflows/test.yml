@@ -22,4 +22,4 @@ jobs:
           files-to-upload: '["./baa.jpg", "./foo.png", "./sheep.txt"]'
 
       - run: |
-          echo ${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}
+          echo '${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}'
