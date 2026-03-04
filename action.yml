@@ -26,7 +26,7 @@ runs:
         github-token: ${{ github.token }}
         result-encoding: 'json'
         script: |
-          const { uploadMultipleFiles } = await import('${{ github.workspace }}/dist/main.js');
+          const { uploadMultipleFiles } = await import('${{ github.action_path }}/dist/main.js');
           return await uploadMultipleFiles(
             JSON.parse(process.env.FILES_TO_UPLOAD), 
             JSON.parse(process.env.ENSURE_UNIQUENESS)
