@@ -12,21 +12,33 @@ jobs:
 
       - name: Setup test files
         run: |
-          curl -o baa.jpg https://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg
-          curl -o foo.png https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png
-          echo "My name is Shaun" > sheep.txt
+          mkdir ./test-data
+          curl -o ./test-data/baa.jpg https://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg
+          curl -o ./test-data/foo.png https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png
+          mkdir ./test-data/nested
+          echo "My name is Shaun" > ./test-data/nested/sheep.txt
 
       - uses: ./
         id: upload-multiple-artifacts
         with:
-          files-to-upload: '["./baa.jpg", "./foo.png", "./sheep.txt"]'
+          files-to-upload: '["./test-data/baa.jpg", "./test-data/foo.png", "./test-data/nested/sheep.txt"]'
 
-      - run: |
-          ACTUAL=$(echo '${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}' | jq -S .)
-          EXPECTED=$(echo '{"./baa.jpg":5751097443,"./foo.png":5751097556,"./sheep.txt":5751097695}' | jq -S .)
-          echo $ACTUAL
-          echo $EXPECTED
+      - name: Check output
+        run: |
+          ACTUAL=$(echo '${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}' | jq -S '[ keys[] ]')
+          EXPECTED=$(echo '["./test-data/baa.jpg", "./test-data/foo.png", "./test-data/nested/sheep.txt"]' | jq -S .)
+          echo "Expect: $EXPECTED"
+          echo "Actual: $ACTUAL"
           if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Assertion error"
+            exit 1;
+          fi
+
+      - name: Ensure files were renamed back correctly
+        run: |
+          ls ./test-data
+          NUM_FILES=$(ls ./test-data | wc -l)
+          if [[ "$NUM_FILES" -ne 3 ]]; then
             echo "Assertion error"
             exit 1;
           fi
