@@ -11,7 +11,7 @@ inputs:
   ensure-uniqueness:
     description: Add a unique suffix to each artifact name, to avoid collisions
     required: false
-    default: true
+    default: 'true'
 
 runs:
   using: composite
