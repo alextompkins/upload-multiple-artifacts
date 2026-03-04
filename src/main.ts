@@ -24,6 +24,7 @@ export async function uploadMultipleFiles(files: string[], ensureUniqueness: boo
 
       const { id } = await uploadSingleFileArtifact(artifactName);
       output[file] = id;
+      console.log('partialOutput', output);
 
       // Rename it back afterwards
       if (ensureUniqueness) await rename(artifactName, file);
