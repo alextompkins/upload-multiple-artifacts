@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "isolatedModules": true,
+    "erasableSyntaxOnly": true,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "baseUrl": "./",
+    "lib": ["ES2024"],
+    "rootDir": "./src",
+    "strict": true,
+  },
+  "include": ["**/*"],
+  "exclude": [
+    "dist",
+    "node_modules",
+  ]
+}

@@ -1,8 +1,11 @@
 {
     "name": "upload-multiple-artifacts",
+    "type": "module",
     "devDependencies": {
         "@actions/artifact": "^6.2.0",
-        "esbuild": "^0.27.3"
+        "@types/node": "^25.2.3",
+        "esbuild": "^0.27.3",
+        "typescript": "^5.9.3"
     },
     "scripts": {
         "build": "esbuild ./src/main.ts --bundle --platform=node --outfile=./dist/main.js"
