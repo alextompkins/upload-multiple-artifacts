@@ -1,0 +1,10 @@
+{
+    "name": "upload-multiple-artifacts",
+    "devDependencies": {
+        "@actions/artifact": "^6.2.0",
+        "esbuild": "^0.27.3"
+    },
+    "scripts": {
+        "build": "esbuild ./src/main.ts --bundle --platform=node --outfile=./dist/main.js"
+    }
+}

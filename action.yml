@@ -8,6 +8,10 @@ inputs:
   files-to-upload:
     description: A JSON-serialized array of filenames to upload
     required: true
+  ensure-uniqueness:
+    description: Add a unique suffix to each artifact name, to avoid collisions
+    required: false
+    default: true
 
 runs:
   using: composite
@@ -25,29 +29,13 @@ runs:
       uses: actions/github-script@v8
       env:
         FILES_TO_UPLOAD: ${{ inputs.files-to-upload }}
+        ENSURE_UNIQUENESS: ${{ inputs.ensure-uniqueness }}
       with:
         github-token: ${{ github.token }}
         result-encoding: 'json'
         script: |
-          const { DefaultArtifactClient } = await import('${{ github.workspace }}/node_modules/@actions/artifact/lib/artifact.js');
-          const artifactClient = new DefaultArtifactClient();
-
-          async function uploadSingleFileArtifact(file) {
-            console.log(`Uploading ${file}...`);
-            const { id, size } = await artifactClient.uploadArtifact(file, [file], './', { skipArchive: true });
-            console.log(`Uploaded artifact ${id} with size ${size} bytes`);
-            return { id, size };
-          }
-          
-          const files = JSON.parse(process.env.FILES_TO_UPLOAD);
-          const output = {};
-
-          for (const file of files) {
-            const { id } = await uploadSingleFileArtifact(file);
-            output[file] = id;
-          }
-
-          return output;
+          const { uploadMultipleFiles } = await import('${{ github.workspace }}/dist/main.js');
+          await uploadMultipleFiles(process.env.FILES_TO_UPLOAD, process.env.ENSURE_UNIQUENESS);
 
 outputs:
   artifact-ids:
