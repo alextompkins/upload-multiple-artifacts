@@ -24,6 +24,7 @@ jobs:
       - run: |
           echo '${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}'
           EXPECTED='{"./baa.jpg":5751097443,"./foo.png":5751097556,"./sheep.txt":5751097695}'
+          echo $EXPECTED
           if [ '${{ steps.upload-multiple-artifacts.outputs.artifact-ids }}' != "$EXPECTED" ]; then
             echo "Assertion error"
             exit 1;
