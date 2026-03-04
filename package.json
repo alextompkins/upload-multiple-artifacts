@@ -8,6 +8,6 @@
         "typescript": "^5.9.3"
     },
     "scripts": {
-        "build": "esbuild ./src/main.ts --bundle --platform=node --outfile=./dist/main.js"
+        "build": "esbuild ./src/main.ts --platform=node --format=esm --outfile=./dist/main.js --bundle"
     }
 }
