@@ -33,6 +33,8 @@ export async function uploadMultipleFiles(files: string[], ensureUniqueness: boo
   }
 
   await Promise.all(files.map(processFile));
-  
+
+  console.log('output', output);
+
   return output;
 }
