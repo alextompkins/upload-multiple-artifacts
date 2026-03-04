@@ -27,12 +27,10 @@ runs:
         result-encoding: 'json'
         script: |
           const { uploadMultipleFiles } = await import('${{ github.workspace }}/dist/main.js');
-          const output = await uploadMultipleFiles(
+          return await uploadMultipleFiles(
             JSON.parse(process.env.FILES_TO_UPLOAD), 
             JSON.parse(process.env.ENSURE_UNIQUENESS)
           );
-          console.log('finalOutput', output);
-          return output;
 
 outputs:
   artifact-ids:

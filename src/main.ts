@@ -24,7 +24,6 @@ export async function uploadMultipleFiles(files: string[], ensureUniqueness: boo
 
       const { id } = await uploadSingleFileArtifact(artifactName);
       output[file] = id;
-      console.log('partialOutput', output);
 
       // Rename it back afterwards
       if (ensureUniqueness) await rename(artifactName, file);
@@ -34,8 +33,6 @@ export async function uploadMultipleFiles(files: string[], ensureUniqueness: boo
   }
 
   await Promise.all(files.map(processFile));
-
-  console.log('output', output);
 
   return output;
 }
