@@ -16,14 +16,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24.x
-
-    - shell: bash
-      run: |
-        npm install @actions/artifact@^6.2.0
-
     - name: Upload artifacts using @actions/artifact
       id: upload-artifacts
       uses: actions/github-script@v8
