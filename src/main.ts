@@ -1,4 +1,5 @@
 import { rename } from 'node:fs/promises';
+import { basename, extname, dirname, join } from 'node:path';
 import { DefaultArtifactClient } from '@actions/artifact';
 
 const artifactClient = new DefaultArtifactClient();
@@ -16,7 +17,8 @@ export async function uploadMultipleFiles(files: string[], ensureUniqueness: boo
 
   async function processFile(file: string) {
     try {
-      const artifactName = ensureUniqueness ? `${file}-${Date.now()}` : file;
+      const ext = extname(file);
+      const artifactName = ensureUniqueness ? join(dirname(file), `${basename(file, ext)}-${Date.now()}${ext}`) : file;
       // Rename to unique filename for upload
       // Necessary because `uploadArtifact()` ignores the provided artifact name
       // when `skipArchive` is true, and instead uses the filename
